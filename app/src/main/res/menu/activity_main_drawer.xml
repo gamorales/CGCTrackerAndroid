@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/mnu_add_car"
+            android:icon="@drawable/car_small"
+            android:title="@string/main_menu_lbl_car" />
+        <item
+            android:id="@+id/mnu_modificar"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/main_menu_lbl_password" />
+        <item
+            android:id="@+id/mnu_logout"
+            android:icon="@drawable/logout"
+            android:title="@string/main_menu_lbl_logout" />
+    </group>
+
+    <item android:title="@string/main_menu_lbl_options">
+        <menu>
+            <item
+                android:id="@+id/mnu_ayuda"
+                android:icon="@drawable/help"
+                android:title="@string/main_menu_lbl_help" />
+            <item
+                android:id="@+id/mnu_acercade"
+                android:icon="@drawable/about"
+                android:title="@string/main_menu_lbl_about" />
+        </menu>
+    </item>
+
+</menu>

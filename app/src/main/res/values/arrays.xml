@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="array_vehiculos_prueba">
+        <item>Seleccionar vehículo...</item>
+        <item>Chevrolet</item>
+        <item>Toyota</item>
+        <item>Mazda</item>
+        <item>Hyundai</item>
+        <item>Renault</item>
+        <item>Fiat</item>
+        <item>Ford</item>
+    </string-array>
+    <string-array name="usuario_forma_pago">
+        <item>Seleccionar forma de pago...</item>
+        <item>Efectivo</item>
+        <item>Tarjeta de crédito</item>
+        <item>Tarjeta débito</item>
+    </string-array>
+    <string-array name="docente_tema">
+        <item>Seleccionar tema...</item>
+        <item>Python</item>
+        <item>PHP</item>
+        <item>JAVA</item>
+        <item>C# .Net</item>
+        <item>ASP</item>
+        <item>Visual Basic .Net</item>
+    </string-array>
+    <string-array name="firebase_tipo_usuario">
+        <item>Seleccionar tipo de usuario...</item>
+        <item>General</item>
+        <item>Administrador</item>
+    </string-array>
+</resources>

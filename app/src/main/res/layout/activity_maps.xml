@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4">
+
+        <Spinner
+            android:id="@+id/spVehiculosMap"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sp_height"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:spinnerMode="dialog"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/btnMapsCargar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/maps_lbl_cargar"
+            android:layout_weight="3"
+
+            android:background="@drawable/borde_redondeado"/>
+
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".main.views.MapsActivity" />
+
+</LinearLayout>

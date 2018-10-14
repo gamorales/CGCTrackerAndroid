@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/cedula"
+            android:layout_weight="2" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/camara"
+            android:id="@+id/btnTomarFoto"
+            android:onClick="accederCamara"
+            android:background="@color/fondo"
+            android:layout_weight="2" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/imagen"
+            android:layout_weight="2" />
+
+    </LinearLayout>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/txtCedula"/>
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="@string/nombre"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/txtNombre"/>
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="@string/usuario"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/txtUsuario"/>
+
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:text="@string/clave"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/txtClave"/>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="3">
+
+        <Button android:text="@string/btncrear"
+               android:id="@+id/btnCrear"
+               android:onClick="accionCrear"/>
+
+        <Button  android:text="@string/btnmodificar"
+                 android:id="@+id/btnModificar"
+                 android:onClick="accionModificar"/>
+
+        <Button android:text="@string/btnlimpiar"
+                android:id="@+id/btnLimpiar"
+                android:onClick="accionLimpiar"/>
+
+        <Button android:text="@string/btnEliminar"
+                android:id="@+id/btnEliminar"
+                android:onClick="accionEliminar"/>
+
+    </GridLayout>
+
+</LinearLayout>
