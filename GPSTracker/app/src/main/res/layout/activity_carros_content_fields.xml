@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/ppal_content_height">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/carros_margin"
+            android:layout_marginRight="@dimen/carros_margin">
+
+            <TextView
+                android:id="@+id/lblCarroPlaca"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/login_mt"
+                android:layout_weight="2"
+                android:text="Placa"
+                android:textSize="@dimen/ppal_text_sizes" />
+
+            <TextView
+                android:id="@+id/lblCarroNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/login_mt"
+                android:layout_weight="2"
+                android:text="Nombre"
+                android:textSize="@dimen/ppal_text_sizes" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/carros_margin"
+            android:layout_marginRight="@dimen/carros_margin">
+
+            <TextView
+                android:id="@+id/lblCarroTelefono"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/login_mt"
+                android:layout_weight="2"
+                android:text="Teléfono"
+                android:textSize="@dimen/ppal_text_sizes" />
+
+            <TextView
+                android:id="@+id/lblCarroEstado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/login_mt"
+                android:layout_weight="2"
+                android:text="Estado"
+                android:textSize="@dimen/ppal_text_sizes" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
