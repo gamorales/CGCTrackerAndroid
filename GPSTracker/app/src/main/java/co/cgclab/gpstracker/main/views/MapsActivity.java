@@ -147,12 +147,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 if (dataSnapshot2.exists()) {
                                     DecimalFormat dFormat  = new DecimalFormat("##.000");
                                     String latitud="", longitud="";
-                                    LatLng carCameraOld = null;
                                     HashMap<String, LatLng> markersCar = new HashMap<String, LatLng>();
                                     for (DataSnapshot snap: dataSnapshot2.getChildren()) {
                                         CoordenadasModel coordenadasModel = snap.getValue(CoordenadasModel.class);
 
-                                        // Nos saltaremos los registros con las mismas coordenadas
+                                        /*
+                                         * Nos saltaremos los registros con las mismas coordenadas
+                                         * o cercanas a 3 decimales
+                                         */
                                         if (!latitud.equals(dFormat.format(coordenadasModel.getLatitud())) &&
                                             !longitud.equals(dFormat.format(coordenadasModel.getLongitud()))) {
                                             markersCar.put(

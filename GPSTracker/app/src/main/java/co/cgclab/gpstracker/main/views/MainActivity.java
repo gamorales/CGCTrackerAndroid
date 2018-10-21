@@ -115,11 +115,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Menú lateral
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this,
-                drawer,
-                toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
+            this,
+            drawer,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         );
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -148,31 +148,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnEscuchar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                placa = spVehiculos.getSelectedItem().toString().split(" - ");
+            placa = spVehiculos.getSelectedItem().toString().split(" - ");
 
-                if (placa.length==2) {
-                    mostrarMensaje(
-                            getResources().getString(R.string.calling_car)+" "+placa[1],
-                            1
-                    );
-                    consultarVehiculo(placa[0]);
-                } else {
-                    mostrarMensaje(getResources().getString(R.string.select_car), 1);
-                }
+            if (placa.length==2) {
+                mostrarMensaje(
+                    getResources().getString(R.string.calling_car)+" "+placa[1],
+                    1
+                );
+                consultarVehiculo(placa[0]);
+            } else {
+                mostrarMensaje(getResources().getString(R.string.select_car), 1);
+            }
             }
         });
         btnTracker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+            startActivity(intent);
             }
         });
         btnStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrarMensaje("check", 1);
-                enviarComandos("status");
+            mostrarMensaje("check", 1);
+            enviarComandos("status");
             }
         });
         btnAbout.setOnClickListener(new View.OnClickListener() {
@@ -186,61 +186,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnBloquear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrarMensaje("Se bloqueará el vehículo", 1);
-                enviarComandos("lock");
+            mostrarMensaje("Se bloqueará el vehículo", 1);
+            enviarComandos("lock");
             }
         });
         btnDesbloquear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrarMensaje("lock off", 1);
-                enviarComandos("unlock");
+            mostrarMensaje("lock off", 1);
+            enviarComandos("unlock");
             }
         });
         btnVelocidadOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrarMensaje("stop quickstop", 1);
-                enviarComandos("speed_on");
+            mostrarMensaje("stop quickstop", 1);
+            enviarComandos("speed_on");
             }
         });
         btnVelocidadOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrarMensaje("stop noquickstop", 1);
-                enviarComandos("speed_off");
+            mostrarMensaje("stop noquickstop", 1);
+            enviarComandos("speed_off");
             }
         });
         btnEncendidoOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrarMensaje("ACC on", 1);
-                enviarComandos("engine_on");
+            mostrarMensaje("ACC on", 1);
+            enviarComandos("engine_on");
             }
         });
         btnEncendidoOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrarMensaje("no ACC", 1);
-                enviarComandos("engine_off");
+            mostrarMensaje("no ACC", 1);
+            enviarComandos("engine_off");
             }
         });
         btnMovimientoOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrarMensaje("fix inteligente", 1);
-                enviarComandos("movement_on");
+            mostrarMensaje("fix inteligente", 1);
+            enviarComandos("movement_on");
             }
         });
         btnMovimientoOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mostrarMensaje("fix cantidad", 1);
-                enviarComandos("movement_off");
+            mostrarMensaje("fix cantidad", 1);
+            enviarComandos("movement_off");
             }
         });
-
-        iniciarConexion();
     }
 
     private void showAboutDialog() {
@@ -255,11 +253,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         cgclab_url.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent openBrowser = new Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(getResources().getString(R.string.base_url))
-                );
-                startActivity(openBrowser);
+            Intent openBrowser = new Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(getResources().getString(R.string.base_url))
+            );
+            startActivity(openBrowser);
             }
         });
 
@@ -280,11 +278,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         placa = spVehiculos.getSelectedItem().toString().split(" - ");
         try {
             if (placa.length==2) {
-                Call<CommandResponse> commandResponseCall =
-                        iComandosVehiculo.comandoVehiculo(
-                                comando.trim(),
-                                placa[0]
-                        );
+                Call<CommandResponse> commandResponseCall = iComandosVehiculo.comandoVehiculo(
+                                                                comando.trim(),
+                                                                placa[0]
+                                                            );
 
                 commandResponseCall.enqueue(new Callback<CommandResponse>() {
                     @Override
@@ -296,8 +293,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 mostrarMensaje(comandos.getData(),1);
                             } else {
                                 mostrarMensaje(
-                                        getResources().getString(R.string.check_data),
-                                        1
+                                    getResources().getString(R.string.check_data),
+                                    1
                                 );
                             }
                         } catch (Exception ex) {
@@ -398,17 +395,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         }
                         mostrarMensaje(
-                                getResources().getString(R.string.update_car_list),
-                                1
+                            getResources().getString(R.string.update_car_list),
+                            1
                         );
                     } catch (Exception ex) {
                         Log.e("MainActivity", "402) ERROR: "+ex.getMessage());
                     }
 
                     ArrayAdapter<String> adapterVehiculo = new ArrayAdapter<String>(
-                            MainActivity.this,
-                            android.R.layout.simple_spinner_item,
-                            lVehiculos
+                        MainActivity.this,
+                        android.R.layout.simple_spinner_item,
+                        lVehiculos
                     );
                     adapterVehiculo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -435,65 +432,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-/*
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mostrarMensaje("FireBase Detectó cambios", 1);
-                lVehiculos.clear();
-
-                try {
-                    for (DataSnapshot elemento: dataSnapshot.getChildren()) {
-                        CarrosModel vehiculo = elemento.getValue(CarrosModel.class);
-                        Log.i(
-                            "MainActivity",
-                                vehiculo.getPlaca()+" -> "+userID+"=="+vehiculo.getIdUsuario()
-                        );
-
-                        if (userID==vehiculo.getIdUsuario()) {
-                            lVehiculos.add(vehiculo.getPlaca() + " - " + vehiculo.getNombre());
-                        }
-                    }
-                } catch (Exception ex) {
-                    Log.e("MainActivity", "216) ERROR: "+ex.getMessage());
-                }
-
-                Log.e("MainActivity", "Tamaño: "+lVehiculos.size());
-
-                if (lVehiculos.size()<1) {
-                    lVehiculos.add("No hay vehículos relacionados...");
-                }
-
-                ArrayAdapter<String> adapterVehiculo = new ArrayAdapter<String>(
-                        MainActivity.this,
-                        android.R.layout.simple_spinner_item,
-                        lVehiculos
-                );
-                adapterVehiculo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                spVehiculos.setAdapter(adapterVehiculo);
-
-                // Cuando se seleccione un elemento, quede mostrándose en el spinner
-                spVehiculos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        spVehiculos.setSelection(i);
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                mostrarMensaje("ERROR: "+databaseError.getMessage(), 1);
-            }
-        });
-*/
     }
 
     private void cargarSpinner2() {
@@ -512,8 +450,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     mostrarMensaje(
-                            getResources().getString(R.string.update_car_list),
-                            1
+                        getResources().getString(R.string.update_car_list),
+                        1
                     );
                     lVehiculos.clear();
                     lVehiculos.add(getResources().getString(R.string.all_cars));
@@ -529,9 +467,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
 
                     ArrayAdapter<String> adapterVehiculo = new ArrayAdapter<String>(
-                            MainActivity.this,
-                            android.R.layout.simple_spinner_item,
-                            lVehiculos
+                        MainActivity.this,
+                        android.R.layout.simple_spinner_item,
+                        lVehiculos
                     );
                     adapterVehiculo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -557,66 +495,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-
-/*
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mostrarMensaje("FireBase Detectó cambios", 1);
-                lVehiculos.clear();
-
-                try {
-                    for (DataSnapshot elemento: dataSnapshot.getChildren()) {
-                        CarrosModel vehiculo = elemento.getValue(CarrosModel.class);
-                        Log.i(
-                            "MainActivity",
-                                vehiculo.getPlaca()+" -> "+userID+"=="+vehiculo.getIdUsuario()
-                        );
-
-                        if (userID==vehiculo.getIdUsuario()) {
-                            lVehiculos.add(vehiculo.getPlaca() + " - " + vehiculo.getNombre());
-                        }
-                    }
-                } catch (Exception ex) {
-                    Log.e("MainActivity", "216) ERROR: "+ex.getMessage());
-                }
-
-                Log.e("MainActivity", "Tamaño: "+lVehiculos.size());
-
-                if (lVehiculos.size()<1) {
-                    lVehiculos.add("No hay vehículos relacionados...");
-                }
-
-                ArrayAdapter<String> adapterVehiculo = new ArrayAdapter<String>(
-                        MainActivity.this,
-                        android.R.layout.simple_spinner_item,
-                        lVehiculos
-                );
-                adapterVehiculo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                spVehiculos.setAdapter(adapterVehiculo);
-
-                // Cuando se seleccione un elemento, quede mostrándose en el spinner
-                spVehiculos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        spVehiculos.setSelection(i);
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                mostrarMensaje("ERROR: "+databaseError.getMessage(), 1);
-            }
-        });
-*/
     }
 
     @Override
@@ -665,14 +543,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-
                 if (firebaseUser==null) {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "No hay usuario conectado",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    mostrarMensaje(getResources().getString(R.string.user_no_connected), 0);
                 }
+
             }
         };
     }
@@ -731,6 +605,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
+        iniciarConexion();
         firebaseAuth.addAuthStateListener(authStateListener);
     }
 

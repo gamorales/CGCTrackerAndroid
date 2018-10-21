@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GPS Tracker</string>
+    <string name="app_name">CGC Tracker</string>
     <string name="action_settings">Settings</string>
 
     <!-- Login Layout //-->
@@ -92,4 +92,5 @@
     <string name="maps_lbl_cargar">Cargar</string>
     <string name="success_car_created">Vehículo creado con éxito</string>
     <string name="carro_lbl_imei">Digite IMEI</string>
+    <string name="user_no_connected">No hay usuario conectado</string>
 </resources>
