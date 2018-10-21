@@ -1,0 +1,64 @@
+apply plugin: 'com.android.application'
+
+def Properties properties = new Properties();
+def propFile = file(System.getenv("HOME")+"/Documentos/keystore_android/keystore.properties");
+def String ruta = System.getenv("HOME")+"/Documentos/keystore_android/cgclab.jks";
+
+// Se cargan las variables de gradle para los keystore
+if(propFile !=null && propFile.exists()){
+    properties.load(new FileInputStream(propFile))
+}else{
+    throw new GradleException("NO EXISTE EL keystore.properties en el Home/keystore_android");
+}
+
+if(ruta.equals('null/keystore_android/cgclab.jks')){
+    throw new GradleException("ERROR--> CONFIGURAR LA VARIABLE DE ENTORNO HOME");
+}
+
+android {
+    signingConfigs {
+        SignGPS {
+            keyAlias properties ['keyAlias']
+            keyPassword properties ['keyPassword']
+            storeFile file(ruta+'')
+            storePassword properties['storePassword']
+        }
+    }
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "co.cgclab.gpstracker"
+        minSdkVersion 22
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.SignGPS
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-database:15.0.1'
+    implementation 'com.google.firebase:firebase-auth:15.1.0'
+    implementation 'com.google.firebase:firebase-storage:16.0.1'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.google.maps.android:android-maps-utils:0.4+'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+}
+
+apply plugin: 'com.google.gms.google-services'

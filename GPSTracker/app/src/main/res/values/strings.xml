@@ -1,0 +1,95 @@
+<resources>
+    <string name="app_name">GPS Tracker</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Login Layout //-->
+    <string name="login_lbl_usuario">Usuario</string>
+    <string name="login_lbl_password">Password</string>
+    <string name="login_lbl_ingresar">Ingresar</string>
+    <string name="login_lbl_clave">¿Olvidaste tu password?</string>
+    <string name="login_lbl_conectar">Conexión</string>
+    <string name="success_connection">Conexión exitosa</string>
+    <string name="fail_connection">Conexión fallida</string>
+    <string name="network_disable">La red está deshabilitada.</string>
+    <string name="internet_offline">No hay conexión a Internet, no se podrá conectar al sistema.</string>
+    <string name="ping_command">ping -c 1 www.google.com</string>
+
+    <!-- Usuario Layout //-->
+    <string name="usuario_lbl_correo">Correo Electrónico</string>
+    <string name="usuario_lbl_clave">Digite Password</string>
+    <string name="usuario_lbl_confirm_clave">Confirme Password</string>
+    <string name="usuario_btn_registrar">Registrar</string>
+    <string name="usuario_lbl_nuevo">Crear Usuario</string>
+
+    <!-- Carro Layout //-->
+    <string name="carro_lbl_nombre">Nombre vehículo</string>
+    <string name="carro_lbl_telefono">Digite número de teléfono</string>
+    <string name="carro_lbl_placa">Digite placa</string>
+    <string name="carro_lbl_clave">Digite clave</string>
+    <string name="carro_lbl_guardar">Guardar</string>
+    <string name="carro_lbl_cancelar">Cancelar</string>
+    <string name="carro_lbl_titulo">Vehículo nuevo</string>
+
+    <!-- Clave Layout //-->
+    <string name="clave_lbl_reset">Resetear password</string>
+    <string name="title_activity_clave">Recuperar Password</string>
+    <string name="clave_lbl_correo">Usuario o Correo Electrónico</string>
+    <string name="clave_lbl_enviar">Recuperar Password</string>
+    <string name="success_email">El correo ha sido enviado con éxito.</string>
+    <string name="fail_email">Falló al enviar el correo; revisa la conexión a Internet</string>
+
+    <!-- Carros Layout //-->
+    <string name="title_activity_carros">Lista de Vehículos</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="title_activity_maps">Mapa Vehículos</string>
+
+
+    <!-- BORRAR DESPUÉS //-->
+    <string name="usuario">Usuario</string>
+    <string name="clave">Clave</string>
+    <string name="acceder">Acceder</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="tipoUsuario">TipoUsuario</string>
+    <string name="cedula">Cedula</string>
+    <string name="nombre">Nombre</string>
+    <string name="btncrear">Crear</string>
+    <string name="btnmodificar">Modificar</string>
+    <string name="btnlimpiar">Limpiar</string>
+    <string name="btnEliminar">Eliminar</string>
+
+    <!-- Main Layout - Activity //-->
+    <string name="nav_header_subtitle">Su vehículo en buenas manos</string>
+    <string name="main_menu_lbl_car">Vehículos</string>
+    <string name="main_menu_lbl_logout">Salir</string>
+    <string name="main_menu_lbl_password">Cambiar password</string>
+    <string name="main_menu_lbl_help">Ayuda</string>
+    <string name="main_menu_lbl_about">Acerca de...</string>
+    <string name="main_menu_lbl_options">Otras opciones</string>
+    <string name="main_lbl_listen">Escuchar</string>
+    <string name="main_lbl_track">Tracker</string>
+    <string name="main_lbl_blocking">Bloquear</string>
+    <string name="main_lbl_unblock">Desbloquear</string>
+    <string name="main_lbl_speed_on">Activar velocidad</string>
+    <string name="main_lbl_speed_off">Desactivar velocidad</string>
+    <string name="main_lbl_key_on">Activar encendido</string>
+    <string name="main_lbl_key_off">Desactivar encendido</string>
+    <string name="main_lbl_movimiento_on">Activar movimiento</string>
+    <string name="main_lbl_movimiento_off">Desactivar Movimiento</string>
+    <string name="base_url">http://www.cgclab.co/</string>
+    <string name="base_url_click"><![CDATA[<u>http://www.cgclab.co</u>]]></string>
+    <string name="main_menu_lbl_status">Estado vehículo</string>
+    <string name="dialog_cerrar">Cerrar</string>
+    <string name="check_data">Revise los datos</string>
+    <string name="select_car">Debe seleccionar un vehículo.</string>
+    <string name="calling_car">Llamando al vehículo</string>
+    <string name="about_lbl_services">Desarrollo - Diseño - Análisis</string>
+    <string name="update_car_list">Se actualizó lista de vehículos</string>
+    <string name="choose_car">Escoja vehículo...</string>
+    <string name="all_cars">Todos los vehículos...</string>
+    <string name="maps_lbl_cargar">Cargar</string>
+    <string name="success_car_created">Vehículo creado con éxito</string>
+    <string name="carro_lbl_imei">Digite IMEI</string>
+</resources>
