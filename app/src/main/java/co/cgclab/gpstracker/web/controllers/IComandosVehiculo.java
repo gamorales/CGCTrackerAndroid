@@ -8,9 +8,13 @@ import retrofit2.http.POST;
 
 public interface IComandosVehiculo {
     @FormUrlEncoded
-    @POST("gpstracker/commands.php")
+    @POST("gps_rest")
     Call<CommandResponse> comandoVehiculo(
+            @Field("imei") String imei,
             @Field("comando") String comando,
-            @Field("placa") String placa
+            @Field("value") String value,
+            @Field("longitud01") String longitud01,
+            @Field("latitud02") String latitud02,
+            @Field("longitud02") String longitud02
     );
 }

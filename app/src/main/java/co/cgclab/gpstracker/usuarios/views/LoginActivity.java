@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -43,25 +44,25 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // Se valida que esté conectado por WiFi o GPRS
-        if (!isNetDisponible()) {
+        if (isNetDisponible()==false) {
             Toast.makeText(
-                    getApplicationContext(),
-                    getResources().getString(R.string.network_disable),
-                    Toast.LENGTH_LONG
+                getApplicationContext(),
+                getResources().getString(R.string.network_disable),
+                Toast.LENGTH_LONG
             ).show();
-
-            // Se verifica si hay salida a Internet
-            if (!isOnlineNet()) {
-                Toast.makeText(
-                        getApplicationContext(),
-                        getResources().getString(R.string.internet_offline),
-                        Toast.LENGTH_LONG
-                ).show();
-            }
-
+            closeApp();
+        }
+        // Se verifica si hay salida a Internet
+        if (isOnlineNet()==false) {
+            Toast.makeText(
+                getApplicationContext(),
+                getResources().getString(R.string.internet_offline),
+                Toast.LENGTH_LONG
+            ).show();
+            closeApp();
         }
 
-        fab = findViewById(R.id.fab);
+        // fab = findViewById(R.id.fab);
         txtLogin = findViewById(R.id.txtLogin);
         txtPassword = findViewById(R.id.txtPassword);
         btnLogin = findViewById(R.id.btnLogin);
@@ -71,58 +72,66 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pbLogin.setVisibility(View.VISIBLE);
-                try {
-                    IUsuariosController iUsuariosController = new UsuariosController();
-                    iUsuariosController.signIn(
-                            txtLogin.getText().toString(),
-                            txtPassword.getText().toString()
-                    );
+            pbLogin.setVisibility(View.VISIBLE);
+            try {
+                IUsuariosController iUsuariosController = new UsuariosController();
+                iUsuariosController.signIn(
+                    txtLogin.getText().toString(),
+                    txtPassword.getText().toString()
+                );
 
-                    firebaseAuth.signInWithEmailAndPassword(
-                            txtLogin.getText().toString(),
-                            txtPassword.getText().toString()
-                    ).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(
-                                        LoginActivity.this,
-                                        getResources().getString(R.string.success_connection),
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.putExtra("email", txtLogin.getText().toString());
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                Toast.makeText(
-                                        LoginActivity.this,
-                                        getResources().getString(R.string.fail_connection),
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                            }
-                        }
-                    });
-                } catch (Exception ex) {
-                    Toast.makeText(getBaseContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                }
-                pbLogin.setVisibility(View.GONE);
+                firebaseAuth.signInWithEmailAndPassword(
+                    txtLogin.getText().toString(),
+                    txtPassword.getText().toString()
+                ).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(
+                            LoginActivity.this,
+                            getResources().getString(R.string.success_connection),
+                            Toast.LENGTH_SHORT
+                        ).show();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("email", txtLogin.getText().toString());
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(
+                            LoginActivity.this,
+                            getResources().getString(R.string.fail_connection),
+                            Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                    }
+                });
+            } catch (Exception ex) {
+                Toast.makeText(getBaseContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            pbLogin.setVisibility(View.GONE);
             }
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
+/*        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
 
-                Intent intent = new Intent(LoginActivity.this, UsuarioActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(LoginActivity.this, UsuarioActivity.class);
+            startActivity(intent);
             }
-        });
+        });*/
 
         iniciarConexion();
+    }
+
+    // Cerrará la app por problemas de conexión
+    private void closeApp() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME)
+              .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     public void iniciarConexion() {
@@ -130,21 +139,14 @@ public class LoginActivity extends AppCompatActivity {
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-                if (firebaseUser!=null) {
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    //Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
-                    intent.putExtra("email", ""+firebaseUser.getEmail());
-                    startActivity(intent);
-                    finish();
-                }/* else {
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "No hay usuario conectado",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }*/
+            if (firebaseUser!=null) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra("email", ""+firebaseUser.getEmail());
+                startActivity(intent);
+                finish();
+            }
             }
         };
     }
@@ -174,19 +176,26 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isNetDisponible() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo actNetInfo = connectivityManager.getActiveNetworkInfo();
 
-        return (actNetInfo != null && actNetInfo.isConnected());
+        if (actNetInfo != null && actNetInfo.isConnected()) {
+            Log.i("LoginActivity", "si");
+        } else {
+            Log.i("LoginActivity", "no");
+        }
+
+        boolean conectado = (actNetInfo != null && actNetInfo.isConnected());
+
+        return conectado;
     }
 
     public Boolean isOnlineNet() {
 
         try {
             Process p = java.lang.Runtime.getRuntime().exec(
-                    getResources().getString(R.string.ping_command)
+                getResources().getString(R.string.ping_command)
             );
 
             int val           = p.waitFor();

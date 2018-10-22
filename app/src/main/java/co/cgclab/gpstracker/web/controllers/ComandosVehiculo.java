@@ -11,18 +11,11 @@ public class ComandosVehiculo implements IComandosVehiculo {
     IComandosVehiculo iComandosVehiculo;
 
     @Override
-    public Call<CommandResponse> comandoVehiculo(String comando, String placa){
-        if (placa.equals("")) {
-            //throw new Exception("Debe seleccionar un vehículo.");
-        }
-
-        if (comando.equals("")) {
-            //throw new Exception("Debe seleccionar una opción.");
-        }
-
+    public Call<CommandResponse> comandoVehiculo(String imei, String comando, String value,
+                                                 String longitud01, String latitud02, String longitud02) {
         Call<CommandResponse> commandResponseCall = iComandosVehiculo.comandoVehiculo(
-                comando,
-                placa
+            imei, comando, value,
+            longitud01, latitud02, longitud02
         );
 
         commandResponseCall.enqueue(new Callback<CommandResponse>() {
@@ -30,9 +23,9 @@ public class ComandosVehiculo implements IComandosVehiculo {
             public void onResponse(Call<CommandResponse> call, Response<CommandResponse> response) {
                 try {
                     if (response.body().getSuccess()==1) {
-
+                        Log.i("ComandosVehiculo", response.body().getData().toString());
                     } else {
-
+                        Log.i("ComandosVehiculo", response.body().getData().toString());
                     }
                 } catch (Exception ex) {
                     Log.e("ComandosVehiculo", "ERROR: "+ex.getMessage());
