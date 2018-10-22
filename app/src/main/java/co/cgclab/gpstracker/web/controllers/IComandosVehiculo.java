@@ -2,19 +2,17 @@ package co.cgclab.gpstracker.web.controllers;
 
 import co.cgclab.gpstracker.web.models.CommandResponse;
 import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.POST;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 
 public interface IComandosVehiculo {
-    @FormUrlEncoded
-    @POST("gps_rest")
+    @GET("gps_rest/{imei}/{comando}/{value}/{longitud01}/{latitud02}/{longitud02}")
     Call<CommandResponse> comandoVehiculo(
-            @Field("imei") String imei,
-            @Field("comando") String comando,
-            @Field("value") String value,
-            @Field("longitud01") String longitud01,
-            @Field("latitud02") String latitud02,
-            @Field("longitud02") String longitud02
+            @Path("imei") String imei,
+            @Path("comando") String comando,
+            @Path("value") String value,
+            @Path("longitud01") String longitud01,
+            @Path("latitud02") String latitud02,
+            @Path("longitud02") String longitud02
     );
 }

@@ -283,22 +283,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switch (tipo) {
                     case "velocidad":
                         valor = txtVelocidad.getText().toString();
-                        enviarComandos(getResources().getString(R.string.msg_speed),
-                                      "speed_limit", valor, "0", "0", "0");
+                        if (valor.trim().equals("")) {
+                            mostrarMensaje(getResources().getString(R.string.msg_no_speed), 1);
+                        } else {
+                            enviarComandos(getResources().getString(R.string.msg_speed),
+                                    "speed_limit", valor, "0", "0", "0");
+                            dialog.dismiss();
+                        }
                         break;
                     case "distancia":
                         valor = (Integer.parseInt(txtDistancia.getText().toString())<1000?"0"+txtDistancia.getText().toString():txtDistancia.getText().toString());
-                        enviarComandos(getResources().getString(R.string.msg_distance),
-                                      "track_distance", valor, "0", "0", "0");
+                        if (valor.trim().equals("")) {
+                            mostrarMensaje(getResources().getString(R.string.msg_no_distance), 1);
+                        } else {
+                            enviarComandos(getResources().getString(R.string.msg_distance),
+                                    "track_distance", valor, "0", "0", "0");
+                        }
+                        dialog.dismiss();
                         break;
                     case "tiempo":
-                        valor = spVehiculos.getSelectedItem().toString();
-                        enviarComandos(getResources().getString(R.string.msg_time),
-                                      "track_interval", valor, "0", "0", "0");
+                        valor = spTiempos.getSelectedItem().toString();
+                        if (valor.trim().equals("")) {
+                            mostrarMensaje(getResources().getString(R.string.msg_no_time), 1);
+                        } else {
+                            enviarComandos(getResources().getString(R.string.msg_time),
+                                    "track_interval", valor, "0", "0", "0");
+                        }
+                        dialog.dismiss();
                         break;
                 }
-
-                dialog.dismiss();
             }
         });
 
@@ -345,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialog.show();
     }
 
-    private void enviarComandos(String mensaje, final String comando, final String value,
+    private void enviarComandos(final String mensaje, final String comando, final String value,
                                 final String longitud01, final String latitud02,
                                 final String longitud02) {
         placa = spVehiculos.getSelectedItem().toString().split(" - ");
@@ -377,6 +390,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         CommandResponse comandos = response.body();
                                         if (comandos.getSuccess()==1) {
                                             mostrarMensaje(comandos.getData(),1);
+                                            mostrarMensaje(mensaje, 1);
                                         } else {
                                             mostrarMensaje(
                                                     getResources().getString(R.string.check_data),
@@ -402,7 +416,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     }
                 });
-                mostrarMensaje(mensaje, 1);
             } else {
                 mostrarMensaje(getResources().getString(R.string.select_car), 1);
             }
