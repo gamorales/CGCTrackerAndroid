@@ -145,7 +145,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot2) {
                                 if (dataSnapshot2.exists()) {
-                                    DecimalFormat dFormat  = new DecimalFormat("##.000");
+                                    DecimalFormat dFormatLat  = new DecimalFormat("##.0000");
+                                    DecimalFormat dFormatLng  = new DecimalFormat("##.000000");
                                     String latitud="", longitud="";
                                     HashMap<String, LatLng> markersCar = new HashMap<String, LatLng>();
                                     for (DataSnapshot snap: dataSnapshot2.getChildren()) {
@@ -155,24 +156,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                          * Nos saltaremos los registros con las mismas coordenadas
                                          * o cercanas a 3 decimales
                                          */
-                                        if (!latitud.equals(dFormat.format(coordenadasModel.getLatitud())) &&
-                                            !longitud.equals(dFormat.format(coordenadasModel.getLongitud()))) {
+                                        if (!latitud.equals(dFormatLat.format(coordenadasModel.getLatitud())) &&
+                                            !longitud.equals(dFormatLng.format(coordenadasModel.getLongitud()))) {
                                             markersCar.put(
                                                 coordenadasModel.getFecha(),
                                                 new LatLng(
-                                                    coordenadasModel.getLatitud(),
-                                                    coordenadasModel.getLongitud()
+                                                    Double.parseDouble(dFormatLat.format(coordenadasModel.getLatitud())),
+                                                    Double.parseDouble(dFormatLng.format(coordenadasModel.getLongitud()))
                                                 )
                                             );
-                                            Log.i("MapsActivity",
-                                                coordenadasModel.getFecha() + ":  " +
-                                                dFormat.format(coordenadasModel.getLatitud()) + ", " +
-                                                dFormat.format(coordenadasModel.getLongitud())
-                                            );
                                         }
-
-                                        latitud = dFormat.format(coordenadasModel.getLatitud());
-                                        longitud = dFormat.format(coordenadasModel.getLongitud());
+                                        Log.i("MapsActivity",
+                                                coordenadasModel.getFecha() + ":  " +
+                                                        dFormatLat.format(coordenadasModel.getLatitud()) + ", " +
+                                                        dFormatLng.format(coordenadasModel.getLongitud())
+                                        );
+                                        latitud = dFormatLat.format(coordenadasModel.getLatitud());
+                                        longitud = dFormatLng.format(coordenadasModel.getLongitud());
 
                                     }
 
