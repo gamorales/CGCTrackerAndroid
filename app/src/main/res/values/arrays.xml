@@ -30,4 +30,18 @@
         <item>General</item>
         <item>Administrador</item>
     </string-array>
+    <string-array name="array_tiempos">
+        <item>10s</item>
+        <item>20s</item>
+        <item>30s</item>
+        <item>1m</item>
+        <item>5m</item>
+        <item>10m</item>
+        <item>30m</item>
+        <item>1h</item>
+        <item>2h</item>
+        <item>5h</item>
+        <item>12h</item>
+        <item>24h</item>
+    </string-array>
 </resources>

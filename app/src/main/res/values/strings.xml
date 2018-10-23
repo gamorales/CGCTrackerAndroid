@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GPS Tracker</string>
+    <string name="app_name">CGC Tracker</string>
     <string name="action_settings">Settings</string>
 
     <!-- Login Layout //-->
@@ -76,8 +76,9 @@
     <string name="main_lbl_speed_off">Desactivar velocidad</string>
     <string name="main_lbl_key_on">Activar encendido</string>
     <string name="main_lbl_key_off">Desactivar encendido</string>
-    <string name="main_lbl_movimiento_on">Activar movimiento</string>
-    <string name="main_lbl_movimiento_off">Desactivar Movimiento</string>
+    <string name="main_lbl_movimiento_on">Reportar localización</string>
+    <string name="main_lbl_movimiento_off">Liberar localización</string>
+    <string name="server_url">http://35.199.123.208/</string>
     <string name="base_url">http://www.cgclab.co/</string>
     <string name="base_url_click"><![CDATA[<u>http://www.cgclab.co</u>]]></string>
     <string name="main_menu_lbl_status">Estado vehículo</string>
@@ -92,4 +93,24 @@
     <string name="maps_lbl_cargar">Cargar</string>
     <string name="success_car_created">Vehículo creado con éxito</string>
     <string name="carro_lbl_imei">Digite IMEI</string>
+    <string name="user_no_connected">No hay usuario conectado</string>
+    <string name="cut_off_oil">Se ha bloqueado el vehículo</string>
+    <string name="resume_oil">Se ha desbloqueado el vehículo</string>
+    <string name="speed_lbl_distance">Distancia en metros</string>
+    <string name="speed_lbl_speed">Velocidad en km/h</string>
+    <string name="btnAceptar">Aceptar</string>
+    <string name="btnCancelar">Cancelar</string>
+    <string name="speed_lbl_velocidad">Digite velocidad:</string>
+    <string name="speed_lbl_distancia">Digite distancia:</string>
+    <string name="speed_lbl_tiempo">Escoja el tiempo:</string>
+    <string name="msg_speed">Se ha enviado el parametro de velocidad</string>
+    <string name="msg_distance">Se ha enviado el parametro de distancia</string>
+    <string name="msg_time">Se ha enviado el parametro de tiempo</string>
+    <string name="msg_speed_off">Se desactiva el modo de límite de velocidad</string>
+    <string name="msg_start_on">Se activa alarma cuando se encienda/apague el vehículo</string>
+    <string name="msg_start_off">Se desactiva alarma cuando se encienda/apague el vehículo</string>
+    <string name="msg_track_off">Se desactiva la localización continua</string>
+    <string name="msg_no_speed">Debe ingresar la velocidad en km/h</string>
+    <string name="msg_no_distance">Debe ingresar la distancia en metros</string>
+    <string name="msg_no_time">Debe escoger un tiempo</string>
 </resources>

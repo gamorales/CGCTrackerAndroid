@@ -33,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -135,31 +136,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         DateFormat dateFormat = new SimpleDateFormat("yyMMdd");
                         Date date = new Date();
                         Query query = firebaseDatabase.getReference(
-                            "Coordenadas/"+userID+"/"+imei
-                        )
-                        .orderByChild("fecha")
-                        .startAt(dateFormat.format(date)+"000000")
-                        .endAt(dateFormat.format(date)+"235959");
+                            "Coordenadas/"+userID+"/"+imei+"/"+dateFormat.format(date)
+                        );
+//                        .orderByChild("fecha");
+//                        .startAt(dateFormat.format(date));
+//                        .endAt(dateFormat.format(date)+"235959");
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot2) {
                                 if (dataSnapshot2.exists()) {
-                                    LatLng carCameraOld = null;
+                                    DecimalFormat dFormatLat  = new DecimalFormat("##.0000");
+                                    DecimalFormat dFormatLng  = new DecimalFormat("##.000000");
+                                    String latitud="", longitud="";
                                     HashMap<String, LatLng> markersCar = new HashMap<String, LatLng>();
                                     for (DataSnapshot snap: dataSnapshot2.getChildren()) {
                                         CoordenadasModel coordenadasModel = snap.getValue(CoordenadasModel.class);
-                                        markersCar.put(
+
+                                        /*
+                                         * Nos saltaremos los registros con las mismas coordenadas
+                                         * o cercanas a 3 decimales
+                                         */
+                                        if (!latitud.equals(dFormatLat.format(coordenadasModel.getLatitud())) &&
+                                            !longitud.equals(dFormatLng.format(coordenadasModel.getLongitud()))) {
+                                            markersCar.put(
                                                 coordenadasModel.getFecha(),
                                                 new LatLng(
-                                                        coordenadasModel.getLatitud(),
-                                                        coordenadasModel.getLongitud()
+                                                    Double.parseDouble(dFormatLat.format(coordenadasModel.getLatitud())),
+                                                    Double.parseDouble(dFormatLng.format(coordenadasModel.getLongitud()))
                                                 )
-                                        );
+                                            );
+                                        }
                                         Log.i("MapsActivity",
-                                            coordenadasModel.getFecha()+":  "+
-                                            coordenadasModel.getLatitud()+", "+
-                                            coordenadasModel.getLongitud()
+                                                coordenadasModel.getFecha() + ":  " +
+                                                        dFormatLat.format(coordenadasModel.getLatitud()) + ", " +
+                                                        dFormatLng.format(coordenadasModel.getLongitud())
                                         );
+                                        latitud = dFormatLat.format(coordenadasModel.getLatitud());
+                                        longitud = dFormatLng.format(coordenadasModel.getLongitud());
+
                                     }
 
                                     // Se organiza el HashMap por orden de la fecha
@@ -171,24 +185,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     for(HashMap.Entry<String, LatLng> carEntry: treeMarkersCar.entrySet()) {
                                         contador++;
 
+                                        Log.i("MapsActivity",
+                                            carEntry.getKey()+" --> "+carEntry.getValue()
+                                        );
                                         // Si es el primer o el último registro, el marker será un carro
                                         if (contador==1 || treeMarkersCar.size()==contador) {
                                             markersClusterManager.addItem(
-                                                    new Markers(
-                                                            new MarkerOptions()
-                                                                    .position(carEntry.getValue())
-                                                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon_small))
-                                                    )
+                                                new Markers(
+                                                    new MarkerOptions()
+                                                        .position(carEntry.getValue())
+                                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_icon_small))
+                                                )
                                             );
                                             carCamera = carEntry.getValue();
-                                        } else if (contador%10==0) {
+                                        } else {
+                                            markersClusterManager.addItem(
+                                                new Markers(
+                                                    new MarkerOptions().position(carEntry.getValue())
+                                                )
+                                            );
+                                        } /* else if (contador%10==0) {
                                             markersClusterManager.addItem(
                                                     new Markers(
-                                                            new MarkerOptions()
-                                                                    .position(carEntry.getValue())
+                                                            new MarkerOptions().position(carEntry.getValue())
                                                     )
                                             );
-                                        }
+                                        }*/
                                     }
 
                                     markersClusterManager.cluster();
