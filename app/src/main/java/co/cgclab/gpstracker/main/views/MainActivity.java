@@ -42,12 +42,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.w3c.dom.Text;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import co.cgclab.gpstracker.R;
 import co.cgclab.gpstracker.carros.models.CarrosModel;
 import co.cgclab.gpstracker.carros.views.CarrosActivity;
+import co.cgclab.gpstracker.main.models.CoordenadasModel;
 import co.cgclab.gpstracker.usuarios.views.ClaveActivity;
 import co.cgclab.gpstracker.web.controllers.IComandosVehiculo;
 import co.cgclab.gpstracker.usuarios.views.LoginActivity;
@@ -68,12 +74,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
     private View headerView;
 
+    // Dialog State
+    TextView estadoPlaca, estadoTelefono, estadoStatus, estadoSpeed, estadoGPS;
+
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser firebaseUser;
     private Retrofit retrofit;
 
-    String login, userID;
+    String login, userID, imei, telefono;
     String[] placa;
     private List<String> lVehiculos;
     private IComandosVehiculo iComandosVehiculo;
@@ -150,24 +159,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnEscuchar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            placa = spVehiculos.getSelectedItem().toString().split(" - ");
+                placa = spVehiculos.getSelectedItem().toString().split(" - ");
 
-            if (placa.length==2) {
-                mostrarMensaje(
-                    getResources().getString(R.string.calling_car)+" "+placa[1],
-                    1
-                );
-                consultarVehiculo(placa[0]);
-            } else {
-                mostrarMensaje(getResources().getString(R.string.select_car), 1);
-            }
+                if (placa.length==2) {
+                    mostrarMensaje(
+                        getResources().getString(R.string.calling_car)+" "+placa[1],
+                        1
+                    );
+                    consultarVehiculo(placa[0], true);
+                } else {
+                    mostrarMensaje(getResources().getString(R.string.select_car), 1);
+                }
             }
         });
         btnTracker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-            startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(intent);
             }
         });
         btnStatus.setOnClickListener(new View.OnClickListener() {
@@ -175,12 +184,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
             //mostrarMensaje("check", 1);
             //enviarComandos("status");
+                showAboutDialog(1);
             }
         });
         btnAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAboutDialog();
+                showAboutDialog(2);
             }
         });
 
@@ -325,37 +335,114 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialog.show();
     }
 
-    private void showAboutDialog() {
-        TextView cgclab_url;
-        ImageView dialog_logo_cerrar;
-
+    public void showAboutDialog(int dialogForm) {
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.activity_about);
 
-        cgclab_url = dialog.findViewById(R.id.cgclab_url);
-        cgclab_url.setText(Html.fromHtml(getResources().getString(R.string.base_url_click)));
-        cgclab_url.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            Intent openBrowser = new Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(getResources().getString(R.string.base_url))
-            );
-            startActivity(openBrowser);
-            }
-        });
+        switch (dialogForm) {
+            case 1:
+                if (placa.length==2) {
+                    dialog.setContentView(R.layout.activity_estado);
+
+                    TextView estado_lbl_cerrar = dialog.findViewById(R.id.estado_lbl_cerrar);
+                    estadoPlaca = dialog.findViewById(R.id.estado_placa);
+                    estadoTelefono = dialog.findViewById(R.id.estado_telefono);
+                    estadoStatus = dialog.findViewById(R.id.estado_estado);
+                    estadoSpeed = dialog.findViewById(R.id.estado_speed);
+                    estadoGPS = dialog.findViewById(R.id.estado_gps);
+                    estado_lbl_cerrar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    ultimoEstado(imei, placa[0]);
+                } else {
+                    mostrarMensaje(getResources().getString(R.string.select_car), 1);
+                }
+                break;
+            case 2:
+                dialog.setContentView(R.layout.activity_about);
+
+                TextView cgclab_url = dialog.findViewById(R.id.cgclab_url);
+                cgclab_url.setText(Html.fromHtml(getResources().getString(R.string.base_url_click)));
+                cgclab_url.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent openBrowser = new Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(getResources().getString(R.string.base_url))
+                        );
+                        startActivity(openBrowser);
+                    }
+                });
+
+                ImageView dialog_logo_cerrar = dialog.findViewById(R.id.dialog_logo_cerrar);
+                dialog_logo_cerrar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                break;
+        }
 
         dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+    }
 
-        dialog_logo_cerrar = dialog.findViewById(R.id.dialog_logo_cerrar);
-        dialog_logo_cerrar.setOnClickListener(new View.OnClickListener() {
+    /**
+     * Se mostrará en el Dialog el último estado del vehículo, extrayendo la info de la última
+     * hora guardada en Firebase
+     *
+     * @param imei
+     * @param placa
+     */
+    public void ultimoEstado(String imei, String placa) {
+        DateFormat dateFormat = new SimpleDateFormat("yyMMdd");
+        Date date = new Date();
+
+        estadoPlaca.setText(placa);
+        estadoTelefono.setText(telefono);
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Coordenadas/"+userID+"/"+imei);
+        Query query = firebaseDatabase.getReference(
+            "Coordenadas/"+userID+"/"+imei+"/"+dateFormat.format(date)
+        ).orderByChild("fecha").limitToLast(1);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                dialog.dismiss();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snap: dataSnapshot.getChildren()) {
+                    final CoordenadasModel coordenadasModel = snap.getValue(CoordenadasModel.class);
+
+                    estadoGPS.setText(coordenadasModel.getLatitud()+","+coordenadasModel.getLongitud());
+                    estadoGPS.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(
+                                    MainActivity.this,
+                                    StreetViewActivity.class
+                            );
+                            intent.putExtra("latitud", coordenadasModel.getLatitud()+"");
+                            intent.putExtra("longitud", coordenadasModel.getLongitud()+"");
+                            startActivity(intent);
+                        }
+                    });
+
+                    estadoStatus.setText(coordenadasModel.getTipo());
+                    estadoSpeed.setText(coordenadasModel.getVelocidad()+" Km/h");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
 
-        dialog.show();
     }
 
     private void enviarComandos(final String mensaje, final String comando, final String value,
@@ -433,11 +520,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         iComandosVehiculo = retrofit.create(IComandosVehiculo.class);
     }
 
-    private void consultarVehiculo(final String placa) {
+    /**
+     * Método encargado de hacer las llamadas al dispositivo, además de guardar el valor en la
+     * variable 'imei'
+     *
+     * @param placa
+     * @param llamar Boolean true -> Hace la llamada al celular
+     */
+    private void consultarVehiculo(final String placa, final boolean llamar) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Vehiculos");
-        Query query = databaseReference.orderByChild("idUsuario")
-                .equalTo(userID);
+        Query query = databaseReference.orderByChild("idUsuario").equalTo(userID);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -446,20 +539,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         for (DataSnapshot elemento : dataSnapshot.getChildren()) {
                             CarrosModel vehiculo = elemento.getValue(CarrosModel.class);
                             if (vehiculo.getPlaca().equals(placa)) {
+                                imei = vehiculo.getImei();
+                                telefono = vehiculo.getTelefono();
 
-                                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                                callIntent.setData(Uri.parse("tel:"+vehiculo.getTelefono().toString()));
-                                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                                    // TODO: Consider calling
-                                    //    ActivityCompat#requestPermissions
-                                    // here to request the missing permissions, and then overriding
-                                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                    //                                          int[] grantResults)
-                                    // to handle the case where the user grants the permission. See the documentation
-                                    // for ActivityCompat#requestPermissions for more details.
-                                    return;
+                                if (llamar) {
+                                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                                    callIntent.setData(Uri.parse("tel:" + vehiculo.getTelefono().toString()));
+                                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                        // TODO: Consider calling
+                                        //    ActivityCompat#requestPermissions
+                                        // here to request the missing permissions, and then overriding
+                                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                        //                                          int[] grantResults)
+                                        // to handle the case where the user grants the permission. See the documentation
+                                        // for ActivityCompat#requestPermissions for more details.
+                                        return;
+                                    }
+                                    startActivity(callIntent);
                                 }
-                                startActivity(callIntent);
                             }
                         }
                     } catch (Exception ex) {
@@ -486,7 +583,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          * Si hubiera un child sería,
          * databaseReference.child("nombreChild").orderByChild("idUsuario").equalTo(userID);
          */
-
         Query query = databaseReference.orderByChild("idUsuario").equalTo(userID);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -524,6 +620,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                             spVehiculos.setSelection(i);
+                            placa = spVehiculos.getSelectedItem().toString().split(" - ");
+                            consultarVehiculo(placa[0], false);
                         }
 
                         @Override
@@ -607,6 +705,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
+        // En caso de ir hacía atrás, se esconderá el menú lateral
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -683,7 +782,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 finish();
                 break;
             case R.id.mnu_acercade:
-                showAboutDialog();
+                showAboutDialog(2);
                 break;
             case R.id.mnu_ayuda:
                 mostrarMensaje("Ayuda", 0);

@@ -1,6 +1,7 @@
 
 package co.cgclab.gpstracker.main.views;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,8 +50,6 @@ import co.cgclab.gpstracker.carros.controllers.ICarrosController;
 import co.cgclab.gpstracker.carros.controllers.IVehiculos;
 import co.cgclab.gpstracker.carros.models.CarrosModel;
 import co.cgclab.gpstracker.main.controllers.ClusterRenderer;
-import co.cgclab.gpstracker.main.controllers.GoogleMaps;
-import co.cgclab.gpstracker.main.controllers.IGoogleMaps;
 import co.cgclab.gpstracker.main.controllers.Markers;
 import co.cgclab.gpstracker.main.models.CoordenadasModel;
 import co.cgclab.gpstracker.main.models.RutaModel;
@@ -68,8 +68,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
 
-    String userID, imei;
+    String userID, imei, telefono;
     Map<String, LatLng> cars;
+
+    // Dialog State
+    TextView estadoPlaca, estadoTelefono, estadoStatus, estadoSpeed, estadoGPS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void cargarVehiculoMapa() {
-        String[] placa = spVehiculosMap.getSelectedItem().toString().split(" - ");
+        final String[] placa = spVehiculosMap.getSelectedItem().toString().split(" - ");
 
         // Sólo si se escogió un vehículo se hará la consulta
         if (placa.length==2) {
@@ -131,6 +134,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if (dataSnapshot.exists()) {
                         CarrosModel vehiculo = dataSnapshot.getValue(CarrosModel.class);
                         imei = vehiculo.getImei();
+                        telefono = vehiculo.getTelefono();
 
                         // Se consultan los markers del día
                         DateFormat dateFormat = new SimpleDateFormat("yyMMdd");
@@ -189,7 +193,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             carEntry.getKey()+" --> "+carEntry.getValue()
                                         );
                                         // Si es el primer o el último registro, el marker será un carro
-                                        if (contador==1 || treeMarkersCar.size()==contador) {
+                                        // if (contador==1 || treeMarkersCar.size()==contador) {
+                                        if (treeMarkersCar.size()==contador) {
                                             markersClusterManager.addItem(
                                                 new Markers(
                                                     new MarkerOptions()
@@ -198,7 +203,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                 )
                                             );
                                             carCamera = carEntry.getValue();
-                                        } else {
+                                        } /*else {
                                             markersClusterManager.addItem(
                                                 new Markers(
                                                     new MarkerOptions().position(carEntry.getValue())
@@ -237,15 +242,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                             @Override
                                             public boolean onMarkerClick(Marker marker) {
-
-
-                                                /*Intent intent = new Intent(
-                                                        MapsActivity.this,
-                                                        StreetViewActivity.class
-                                                );
-                                                intent.putExtra("latitud", marker.getPosition().latitude+"");
-                                                intent.putExtra("longitud",marker.getPosition().longitude+"");
-                                                startActivity(intent);*/
+                                                showStatusDialog(placa[0]);
 
                                                 return false;
                                             }
@@ -372,6 +369,85 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 1
             );
         }
+
+    }
+
+    private void showStatusDialog(String placa) {
+        final Dialog dialog = new Dialog(this);
+
+        dialog.setContentView(R.layout.activity_estado);
+
+        TextView estado_lbl_cerrar = dialog.findViewById(R.id.estado_lbl_cerrar);
+        estadoPlaca = dialog.findViewById(R.id.estado_placa);
+        estadoTelefono = dialog.findViewById(R.id.estado_telefono);
+        estadoStatus = dialog.findViewById(R.id.estado_estado);
+        estadoSpeed = dialog.findViewById(R.id.estado_speed);
+        estadoGPS = dialog.findViewById(R.id.estado_gps);
+        estado_lbl_cerrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        ultimoEstado(imei, placa);
+
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+
+    }
+
+    /**
+     * Se mostrará en el Dialog el último estado del vehículo, extrayendo la info de la última
+     * hora guardada en Firebase
+     *
+     * @param imei
+     * @param placa
+     */
+    private void ultimoEstado(String imei, String placa) {
+        DateFormat dateFormat = new SimpleDateFormat("yyMMdd");
+        Date date = new Date();
+
+        estadoPlaca.setText(placa);
+        estadoTelefono.setText(telefono);
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Coordenadas/"+userID+"/"+imei);
+        Query query = firebaseDatabase.getReference(
+                "Coordenadas/"+userID+"/"+imei+"/"+dateFormat.format(date)
+        ).orderByChild("fecha").limitToLast(1);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snap: dataSnapshot.getChildren()) {
+                    final CoordenadasModel coordenadasModel = snap.getValue(CoordenadasModel.class);
+
+                    estadoGPS.setText(coordenadasModel.getLatitud()+","+coordenadasModel.getLongitud());
+
+                    // Se abrirá el StreetView
+                    estadoGPS.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(
+                                MapsActivity.this,
+                                StreetViewActivity.class
+                            );
+                            intent.putExtra("latitud", coordenadasModel.getLatitud()+"");
+                            intent.putExtra("longitud", coordenadasModel.getLongitud()+"");
+                            startActivity(intent);
+                        }
+                    });
+                    estadoStatus.setText(coordenadasModel.getTipo());
+                    estadoSpeed.setText(coordenadasModel.getVelocidad()+" Km/h");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 

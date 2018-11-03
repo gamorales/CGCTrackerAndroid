@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CGC Tracker</string>
+    <string name="app_name">GPS Tracker</string>
     <string name="action_settings">Settings</string>
 
     <!-- Login Layout //-->
@@ -113,4 +113,12 @@
     <string name="msg_no_speed">Debe ingresar la velocidad en km/h</string>
     <string name="msg_no_distance">Debe ingresar la distancia en metros</string>
     <string name="msg_no_time">Debe escoger un tiempo</string>
+
+    <!-- Layout Dialog Estado //-->
+    <string name="estado_lbl_placa">Placa:</string>
+    <string name="estado_lbl_telefono">Teléfono:</string>
+    <string name="estado_lbl_estado">Estado:</string>
+    <string name="estado_lbl_gas">Combustible:</string>
+    <string name="estado_lbl_gps">Coords:</string>
+    <string name="estado_lbl_speed">Velocidad:</string>
 </resources>

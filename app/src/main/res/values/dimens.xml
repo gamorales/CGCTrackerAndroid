@@ -32,4 +32,5 @@
     <dimen name="dialog_about_padding">16dp</dimen>
     <dimen name="login_logo_height">200dp</dimen>
     <dimen name="dialog_speed_height">250dp</dimen>
+    <dimen name="dialog_estado_height">230dp</dimen>
 </resources>

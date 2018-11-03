@@ -21,12 +21,10 @@
             android:layout_height="@dimen/sp_height"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_marginLeft="5dp"
-
             android:spinnerMode="dialog"
             style="@style/EditTextHint" />
 
