@@ -1,29 +1,6 @@
 apply plugin: 'com.android.application'
 
-def Properties properties = new Properties();
-def propFile = file(System.getenv("HOME")+"/Documentos/keystore_android/keystore.properties");
-def String ruta = System.getenv("HOME")+"/Documentos/keystore_android/cgclab.jks";
-
-// Se cargan las variables de gradle para los keystore
-if(propFile !=null && propFile.exists()){
-    properties.load(new FileInputStream(propFile))
-}else{
-    throw new GradleException("NO EXISTE EL keystore.properties en el Home/keystore_android");
-}
-
-if(ruta.equals('null/keystore_android/cgclab.jks')){
-    throw new GradleException("ERROR--> CONFIGURAR LA VARIABLE DE ENTORNO HOME");
-}
-
 android {
-    signingConfigs {
-        SignGPS {
-            keyAlias properties ['keyAlias']
-            keyPassword properties ['keyPassword']
-            storeFile file(ruta+'')
-            storePassword properties['storePassword']
-        }
-    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "co.cgclab.gpstracker"
@@ -37,7 +14,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.SignGPS
         }
     }
 }
